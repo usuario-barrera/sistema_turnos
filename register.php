@@ -5,15 +5,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
     $email = $_POST['email'];
+    $type = $_POST['type']; // Obtener el tipo de usuario del formulario
 
-    $sql = "INSERT INTO users (username, password, email, type) VALUES ('$username', '$password', '$email', 'administrativo')";
+    $sql = "INSERT INTO users (username, password, email, type) VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssss", $username, $password, $email, $type);
 
-    if ($conn->query($sql) === TRUE) {
+    if ($stmt->execute()) {
         header('Location: login.php');
         exit();
     } else {
-        $error = "Error al registrarse: " . $conn->error;
+        $error = "Error al registrarse: " . $stmt->error;
     }
+
+    $stmt->close();
+    $conn->close();
 }
 ?>
 
@@ -42,6 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label for="email">Correo Electrónico:</label>
                 <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="type">Tipo de Usuario:</label>
+                <select class="form-control" name="type" required>
+                    <option value="paciente">Paciente</option>
+                    <option value="administrativo">Administrativo</option>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Registrarse</button>
         </form>
