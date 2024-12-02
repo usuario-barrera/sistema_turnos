@@ -1,0 +1,12 @@
+[core]
+	editor = \"C:\\Users\\barre\\AppData\\Local\\Programs\\Microsoft VS Code\\bin\\code\" --wait
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = HugoBarrera
+	email = barrera85@outlook.com.ar
+[gui]
+	recentrepo = C:/xampp/htdocs/sistema_turnos
